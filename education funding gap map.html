@@ -256,17 +256,17 @@
 
 <main>
   <div class="intro">
-    <p>Explore how education funding varies across the United States. Toggle between the funding gap per student and total per-pupil spending by state.</p>
+    <p>Explore how education funding varies across the United States. Toggle between the difference from the national average and total per-pupil spending by state.</p>
   </div>
 
   <div class="stats-grid">
     <div class="stat-card">
-      <div class="stat-label">Highest funding gap</div>
+      <div class="stat-label">Highest difference</div>
       <div class="stat-val" id="s-high">—</div>
       <div class="stat-sub" id="s-high-sub">loading...</div>
     </div>
     <div class="stat-card">
-      <div class="stat-label">Lowest funding gap</div>
+      <div class="stat-label">Lowest difference</div>
       <div class="stat-val" id="s-low">—</div>
       <div class="stat-sub" id="s-low-sub">loading...</div>
     </div>
@@ -276,7 +276,7 @@
       <div class="stat-sub">per pupil, FY 2024 (Census)</div>
     </div>
     <div class="stat-card">
-      <div class="stat-label">States with gap &gt; $2k</div>
+      <div class="stat-label">States below avg by &gt; $2k</div>
       <div class="stat-val" id="s-count">—</div>
       <div class="stat-sub">per student annually</div>
     </div>
@@ -285,7 +285,7 @@
   <div class="map-card">
     <div class="controls">
       <label>View:</label>
-      <button class="toggle-btn active" onclick="setLayer('gap')" id="btn-gap">Funding gap</button>
+      <button class="toggle-btn active" onclick="setLayer('gap')" id="btn-gap">Difference from national average</button>
       <button class="toggle-btn" onclick="setLayer('spend')" id="btn-spend">Per-pupil spending</button>
     </div>
     <div class="map-container">
@@ -298,7 +298,7 @@
     </div>
   </div>
 
-  <p class="source">Source: U.S. Census Bureau, 2024 Annual Survey of School System Finances (FY 2024). Funding gap = national average ($17,619) minus state per-pupil spending. States above the national average show no gap.</p>
+  <p class="source">Source: U.S. Census Bureau, 2024 Annual Survey of School System Finances (FY 2024). Difference from national average ($17,619) minus state per-pupil spending. States above the national average show no gap.</p>
 </main>
 
 <footer>
@@ -330,7 +330,7 @@ const stateData = {
 
 const gapColors = ["#e0e7ff","#c7d2fe","#a5b4fc","#818cf8","#6366f1","#4f46e5","#3730a3"];
 const spendColors = ["#dcfce7","#bbf7d0","#86efac","#4ade80","#22c55e","#16a34a","#166534"];
-const gapLabels = ["No gap","$1–2k","$2–3k","$3–4k","$4–5k","$5–6k","$6k+"];
+const gapLabels = ["No difference","$1–2k","$2–3k","$3–4k","$4–5k","$5–6k","$6k+"];
 const spendLabels = ["< $12k","$12–14k","$14–16k","$16–18k","$18–20k","$20–24k","$24k+"];
 
 let currentLayer = "gap";
@@ -374,9 +374,9 @@ function updateStats() {
   const sorted = [...withGap].sort((a, b) => b[1].gap - a[1].gap);
   const high = sorted[0], low = sorted[sorted.length - 1];
   document.getElementById("s-high").textContent = high[0].split(" ").pop();
-  document.getElementById("s-high-sub").textContent = `$${high[1].gap.toLocaleString()} gap/student`;
+  document.getElementById("s-high-sub").textContent = `$${high[1].gap.toLocaleString()} below avg`;
   document.getElementById("s-low").textContent = low[0].split(" ").pop();
-  document.getElementById("s-low-sub").textContent = `$${low[1].gap.toLocaleString()} gap/student`;
+  document.getElementById("s-low-sub").textContent = `$${low[1].gap.toLocaleString()} below avg`;
   const count = entries.filter(e => e[1].gap > 2000).length;
   document.getElementById("s-count").textContent = count;
 }
@@ -413,7 +413,7 @@ function renderMap() {
       tooltip.style.top = y + "px";
       tooltip.innerHTML = `
         <strong>${name}</strong>
-        <div class="tooltip-row"><span>Funding gap</span><span>${info.gap > 0 ? "$" + info.gap.toLocaleString() + "/student" : "None"}</span></div>
+        <div class="tooltip-row"><span>Diff from national avg</span><span>${info.gap > 0 ? "-$" + info.gap.toLocaleString() : "Above average"}</span></div>
         <div class="tooltip-row"><span>Per-pupil spend</span><span>$${info.spend.toLocaleString()}</span></div>
       `;
     })
