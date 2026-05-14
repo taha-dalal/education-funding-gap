@@ -59,9 +59,7 @@
       padding: 40px 24px;
     }
 
-    .intro {
-      margin-bottom: 32px;
-    }
+    .intro { margin-bottom: 32px; }
 
     .intro p {
       font-size: 1rem;
@@ -274,8 +272,8 @@
     </div>
     <div class="stat-card">
       <div class="stat-label">National avg spend</div>
-      <div class="stat-val">$13,700</div>
-      <div class="stat-sub">per pupil per year</div>
+      <div class="stat-val">$17,619</div>
+      <div class="stat-sub">per pupil, FY 2024 (Census)</div>
     </div>
     <div class="stat-card">
       <div class="stat-label">States with gap &gt; $2k</div>
@@ -300,7 +298,7 @@
     </div>
   </div>
 
-  <p class="source">* Data shown is representative. Sources: National Education Association, U.S. Census Bureau Annual Survey of School System Finances.</p>
+  <p class="source">Source: U.S. Census Bureau, 2024 Annual Survey of School System Finances (FY 2024). Funding gap = national average ($17,619) minus state per-pupil spending. States above the national average show no gap.</p>
 </main>
 
 <footer>
@@ -311,29 +309,29 @@
 <script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
 <script>
 const stateData = {
-  "Alabama":{"gap":2800,"spend":10200},"Alaska":{"gap":600,"spend":19800},"Arizona":{"gap":2200,"spend":9400},
-  "Arkansas":{"gap":2100,"spend":10100},"California":{"gap":1100,"spend":16200},"Colorado":{"gap":1400,"spend":12800},
-  "Connecticut":{"gap":200,"spend":21400},"Delaware":{"gap":500,"spend":17200},"Florida":{"gap":1900,"spend":10500},
-  "Georgia":{"gap":2000,"spend":11000},"Hawaii":{"gap":700,"spend":16800},"Idaho":{"gap":2600,"spend":8300},
-  "Illinois":{"gap":3800,"spend":14400},"Indiana":{"gap":1600,"spend":10800},"Iowa":{"gap":900,"spend":12200},
-  "Kansas":{"gap":1200,"spend":11700},"Kentucky":{"gap":1500,"spend":11100},"Louisiana":{"gap":2400,"spend":11400},
-  "Maine":{"gap":800,"spend":14100},"Maryland":{"gap":400,"spend":16900},"Massachusetts":{"gap":300,"spend":18700},
-  "Michigan":{"gap":1700,"spend":12100},"Minnesota":{"gap":700,"spend":13800},"Mississippi":{"gap":3200,"spend":9100},
-  "Missouri":{"gap":2100,"spend":10900},"Montana":{"gap":1100,"spend":12400},"Nebraska":{"gap":1000,"spend":12600},
-  "Nevada":{"gap":1800,"spend":9800},"New Hampshire":{"gap":1300,"spend":15200},"New Jersey":{"gap":100,"spend":20800},
-  "New Mexico":{"gap":1600,"spend":10600},"New York":{"gap":400,"spend":24200},"North Carolina":{"gap":1900,"spend":10100},
-  "North Dakota":{"gap":600,"spend":14600},"Ohio":{"gap":1500,"spend":12300},"Oklahoma":{"gap":2700,"spend":9400},
-  "Oregon":{"gap":1000,"spend":13600},"Pennsylvania":{"gap":1400,"spend":16100},"Rhode Island":{"gap":500,"spend":17400},
-  "South Carolina":{"gap":2000,"spend":10700},"South Dakota":{"gap":1800,"spend":10200},"Tennessee":{"gap":2100,"spend":10400},
-  "Texas":{"gap":2500,"spend":10500},"Utah":{"gap":2900,"spend":7800},"Vermont":{"gap":400,"spend":19900},
-  "Virginia":{"gap":1100,"spend":13400},"Washington":{"gap":800,"spend":14800},"West Virginia":{"gap":1700,"spend":11800},
-  "Wisconsin":{"gap":900,"spend":13100},"Wyoming":{"gap":500,"spend":17900}
+  "Alabama":{"gap":4021,"spend":13598},"Alaska":{"gap":0,"spend":20340},"Arizona":{"gap":5616,"spend":12003},
+  "Arkansas":{"gap":3746,"spend":13873},"California":{"gap":0,"spend":20233},"Colorado":{"gap":1722,"spend":15897},
+  "Connecticut":{"gap":0,"spend":25801},"Delaware":{"gap":0,"spend":22201},"Florida":{"gap":4930,"spend":12689},
+  "Georgia":{"gap":1786,"spend":15833},"Hawaii":{"gap":0,"spend":23878},"Idaho":{"gap":6559,"spend":11060},
+  "Illinois":{"gap":0,"spend":20253},"Indiana":{"gap":3997,"spend":13622},"Iowa":{"gap":3250,"spend":14369},
+  "Kansas":{"gap":2772,"spend":14847},"Kentucky":{"gap":3023,"spend":14596},"Louisiana":{"gap":2974,"spend":14645},
+  "Maine":{"gap":0,"spend":19962},"Maryland":{"gap":0,"spend":20208},"Massachusetts":{"gap":0,"spend":22947},
+  "Michigan":{"gap":0,"spend":18314},"Minnesota":{"gap":521,"spend":17098},"Mississippi":{"gap":5526,"spend":12093},
+  "Missouri":{"gap":3378,"spend":14241},"Montana":{"gap":3963,"spend":13656},"Nebraska":{"gap":1472,"spend":16147},
+  "Nevada":{"gap":3851,"spend":13768},"New Hampshire":{"gap":0,"spend":22978},"New Jersey":{"gap":0,"spend":26280},
+  "New Mexico":{"gap":0,"spend":17844},"New York":{"gap":0,"spend":30012},"North Carolina":{"gap":4624,"spend":12995},
+  "North Dakota":{"gap":517,"spend":17102},"Ohio":{"gap":362,"spend":17257},"Oklahoma":{"gap":5457,"spend":12162},
+  "Oregon":{"gap":458,"spend":17161},"Pennsylvania":{"gap":0,"spend":21091},"Rhode Island":{"gap":0,"spend":22110},
+  "South Carolina":{"gap":2559,"spend":15060},"South Dakota":{"gap":4791,"spend":12828},"Tennessee":{"gap":5422,"spend":12197},
+  "Texas":{"gap":5175,"spend":12444},"Utah":{"gap":6272,"spend":11347},"Vermont":{"gap":0,"spend":28818},
+  "Virginia":{"gap":515,"spend":17104},"Washington":{"gap":0,"spend":18564},"West Virginia":{"gap":3044,"spend":14575},
+  "Wisconsin":{"gap":1829,"spend":15790},"Wyoming":{"gap":0,"spend":20521}
 };
 
 const gapColors = ["#e0e7ff","#c7d2fe","#a5b4fc","#818cf8","#6366f1","#4f46e5","#3730a3"];
 const spendColors = ["#dcfce7","#bbf7d0","#86efac","#4ade80","#22c55e","#16a34a","#166534"];
-const gapLabels = ["< $500","$500–1k","$1k–1.5k","$1.5k–2k","$2k–2.5k","$2.5k–3k","$3k+"];
-const spendLabels = ["< $9k","$9–11k","$11–13k","$13–15k","$15–17k","$17–20k","$20k+"];
+const gapLabels = ["No gap","$1–2k","$2–3k","$3–4k","$4–5k","$5–6k","$6k+"];
+const spendLabels = ["< $12k","$12–14k","$14–16k","$16–18k","$18–20k","$20–24k","$24k+"];
 
 let currentLayer = "gap";
 let geoData = null;
@@ -343,21 +341,21 @@ function getColor(name, layer) {
   if (!d) return "#e2e8f0";
   if (layer === "gap") {
     const v = d.gap;
-    if (v < 500) return gapColors[0];
-    if (v < 1000) return gapColors[1];
-    if (v < 1500) return gapColors[2];
-    if (v < 2000) return gapColors[3];
-    if (v < 2500) return gapColors[4];
-    if (v < 3000) return gapColors[5];
+    if (v < 1) return gapColors[0];
+    if (v < 2000) return gapColors[1];
+    if (v < 3000) return gapColors[2];
+    if (v < 4000) return gapColors[3];
+    if (v < 5000) return gapColors[4];
+    if (v < 6000) return gapColors[5];
     return gapColors[6];
   } else {
     const v = d.spend;
-    if (v < 9000) return spendColors[0];
-    if (v < 11000) return spendColors[1];
-    if (v < 13000) return spendColors[2];
-    if (v < 15000) return spendColors[3];
-    if (v < 17000) return spendColors[4];
-    if (v < 20000) return spendColors[5];
+    if (v < 12000) return spendColors[0];
+    if (v < 14000) return spendColors[1];
+    if (v < 16000) return spendColors[2];
+    if (v < 18000) return spendColors[3];
+    if (v < 20000) return spendColors[4];
+    if (v < 24000) return spendColors[5];
     return spendColors[6];
   }
 }
@@ -372,7 +370,8 @@ function buildLegend(layer) {
 
 function updateStats() {
   const entries = Object.entries(stateData);
-  const sorted = [...entries].sort((a, b) => b[1].gap - a[1].gap);
+  const withGap = entries.filter(e => e[1].gap > 0);
+  const sorted = [...withGap].sort((a, b) => b[1].gap - a[1].gap);
   const high = sorted[0], low = sorted[sorted.length - 1];
   document.getElementById("s-high").textContent = high[0].split(" ").pop();
   document.getElementById("s-high-sub").textContent = `$${high[1].gap.toLocaleString()} gap/student`;
@@ -414,14 +413,14 @@ function renderMap() {
       tooltip.style.top = y + "px";
       tooltip.innerHTML = `
         <strong>${name}</strong>
-        <div class="tooltip-row"><span>Funding gap</span><span>$${info.gap.toLocaleString()}/student</span></div>
+        <div class="tooltip-row"><span>Funding gap</span><span>${info.gap > 0 ? "$" + info.gap.toLocaleString() + "/student" : "None"}</span></div>
         <div class="tooltip-row"><span>Per-pupil spend</span><span>$${info.spend.toLocaleString()}</span></div>
       `;
     })
     .on("mouseleave", () => { tooltip.style.display = "none"; });
 }
 
-fetch("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json")
+fetch("states-10m.json")
   .then(r => r.json())
   .then(data => {
     geoData = data;
@@ -430,7 +429,7 @@ fetch("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json")
     renderMap();
   })
   .catch(() => {
-    document.getElementById("map").innerHTML = '<text x="480" y="300" text-anchor="middle" fill="#64748b" font-size="16">Failed to load map data. Check your internet connection.</text>';
+    document.getElementById("map").innerHTML = '<text x="480" y="300" text-anchor="middle" fill="#64748b" font-size="16">Failed to load map data. Please make sure states-10m.json is uploaded to your repo.</text>';
   });
 </script>
 </body>
