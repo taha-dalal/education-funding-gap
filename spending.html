@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>How Education Money Is Spent</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --dark: #1e293b;
+      --light-bg: #f8fafc;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --white: #ffffff;
+      --c1: #4f46e5; --c2: #7c3aed; --c3: #db2777; --c4: #ea580c;
+      --c5: #ca8a04; --c6: #16a34a; --c7: #0891b2; --c8: #475569;
+      --c9: #9333ea; --c10: #0f766e;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: var(--light-bg); color: var(--dark); min-height: 100vh; }
+
+    header {
+      background: white; border-bottom: 1px solid var(--border);
+      padding: 20px 40px; display: flex; align-items: center; gap: 16px;
+    }
+    .badge {
+      background: rgba(79,70,229,0.1); color: var(--primary);
+      padding: 6px 14px; border-radius: 100px; font-size: 0.78rem;
+      font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    header h1 {
+      font-size: 1.3rem; font-weight: 800;
+      background: linear-gradient(to right, #1e293b, #4f46e5);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+
+    main { max-width: 1200px; margin: 0 auto; padding: 40px 24px; }
+
+    .page-title { font-size: 2rem; font-weight: 900; color: var(--dark); margin-bottom: 8px; }
+    .page-sub { color: var(--muted); font-size: 1rem; margin-bottom: 48px; max-width: 600px; line-height: 1.7; }
+
+    /* ---- SECTION TITLES ---- */
+    .section-header {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 24px;
+    }
+    .section-num {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: var(--primary); color: white;
+      font-size: 0.9rem; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .section-title { font-size: 1.4rem; font-weight: 800; color: var(--dark); }
+    .section-sub { font-size: 0.85rem; color: var(--muted); margin-top: 2px; }
+
+    /* ---- CARD ---- */
+    .card {
+      background: white; border: 1px solid var(--border);
+      border-radius: 20px; padding: 32px; margin-bottom: 48px;
+    }
+
+    /* ---- STATE COMPARE ---- */
+    .state-selectors {
+      display: grid; grid-template-columns: 1fr auto 1fr;
+      gap: 16px; align-items: center; margin-bottom: 32px;
+    }
+    .state-select-wrap { display: flex; flex-direction: column; gap: 8px; }
+    .state-select-wrap label { font-size: 0.78rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    .state-select-wrap select {
+      padding: 12px 16px; border-radius: 12px; border: 1.5px solid var(--border);
+      font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 600;
+      color: var(--dark); background: white; cursor: pointer; appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 14px center;
+      transition: border-color 0.2s;
+    }
+    .state-select-wrap select:focus { outline: none; border-color: var(--primary); }
+    .vs-badge {
+      width: 44px; height: 44px; background: var(--light-bg); border: 1.5px solid var(--border);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 0.78rem; font-weight: 800; color: var(--muted); flex-shrink: 0;
+      align-self: flex-end; margin-bottom: 2px;
+    }
+
+    /* Chart bars */
+    .compare-chart { display: flex; flex-direction: column; gap: 14px; }
+    .compare-row { display: grid; grid-template-columns: 130px 1fr 60px 1fr 60px; gap: 8px; align-items: center; }
+    .cat-label { font-size: 0.78rem; font-weight: 600; color: var(--muted); text-align: right; padding-right: 8px; }
+    .bar-wrap { height: 28px; background: var(--light-bg); border-radius: 6px; overflow: hidden; position: relative; }
+    .bar-fill {
+      height: 100%; border-radius: 6px;
+      transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex; align-items: center; padding-left: 8px;
+    }
+    .bar-val { font-size: 0.75rem; font-weight: 700; color: white; white-space: nowrap; }
+    .bar-pct { font-size: 0.75rem; font-weight: 700; color: var(--muted); text-align: right; }
+
+    .compare-legend {
+      display: flex; gap: 24px; margin-top: 24px; padding-top: 20px;
+      border-top: 1px solid var(--border); flex-wrap: wrap;
+    }
+    .legend-state {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 0.85rem; font-weight: 600; color: var(--dark);
+    }
+    .legend-dot { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+
+    /* ---- SLIDER TOOL ---- */
+    .slider-intro {
+      display: flex; align-items: center; gap: 16px;
+      margin-bottom: 28px; flex-wrap: wrap;
+    }
+    .slider-intro label { font-size: 0.85rem; font-weight: 600; color: var(--muted); }
+    .slider-intro select {
+      padding: 10px 16px; border-radius: 10px; border: 1.5px solid var(--border);
+      font-family: 'Inter', sans-serif; font-size: 0.9rem; font-weight: 600;
+      color: var(--dark); background: white; cursor: pointer; appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 14px center;
+      padding-right: 36px;
+    }
+    .total-display {
+      margin-left: auto; background: var(--primary);
+      color: white; padding: 10px 20px; border-radius: 10px;
+      font-size: 0.9rem; font-weight: 700;
+    }
+
+    .slider-grid { display: flex; flex-direction: column; gap: 20px; }
+    .slider-row { display: grid; grid-template-columns: 180px 1fr 80px 100px; gap: 12px; align-items: center; }
+    .slider-label { font-size: 0.85rem; font-weight: 600; color: var(--dark); }
+    .slider-label span { display: block; font-size: 0.72rem; color: var(--muted); font-weight: 400; margin-top: 2px; }
+
+    input[type=range] {
+      -webkit-appearance: none; appearance: none;
+      width: 100%; height: 6px; border-radius: 3px;
+      background: var(--border); outline: none; cursor: pointer;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none; appearance: none;
+      width: 20px; height: 20px; border-radius: 50%;
+      background: var(--primary); cursor: pointer;
+      box-shadow: 0 2px 8px rgba(79,70,229,0.35);
+      transition: transform 0.1s;
+    }
+    input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+
+    .slider-dollar { font-size: 0.9rem; font-weight: 700; color: var(--dark); text-align: right; }
+    .slider-pct-pill {
+      padding: 4px 10px; border-radius: 100px;
+      font-size: 0.75rem; font-weight: 700;
+      text-align: center; color: white;
+    }
+
+    .donut-wrap {
+      display: flex; align-items: center; gap: 40px;
+      margin-top: 32px; padding-top: 28px;
+      border-top: 1px solid var(--border); flex-wrap: wrap;
+    }
+    .donut-svg { flex-shrink: 0; }
+    .donut-legend { display: flex; flex-direction: column; gap: 8px; flex: 1; min-width: 200px; }
+    .donut-legend-item {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 0.82rem; color: var(--dark);
+    }
+    .donut-legend-item .dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+    .donut-legend-item .name { flex: 1; font-weight: 500; }
+    .donut-legend-item .pct { font-weight: 700; color: var(--muted); }
+
+    .source {
+      font-size: 0.75rem; color: var(--muted);
+      text-align: center; padding-top: 8px; margin-top: 16px;
+    }
+
+    footer {
+      text-align: center; padding: 32px; font-size: 0.8rem;
+      color: var(--muted); border-top: 1px solid var(--border);
+      margin-top: 40px; background: white;
+    }
+
+    @media (max-width: 700px) {
+      .state-selectors { grid-template-columns: 1fr; }
+      .vs-badge { display: none; }
+      .compare-row { grid-template-columns: 100px 1fr 50px 1fr 50px; }
+      .slider-row { grid-template-columns: 1fr 80px; grid-template-rows: auto auto; }
+      .slider-row input { grid-column: 1 / -1; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <span class="badge">2026 Initiative</span>
+  <h1>Bridging the Gap in Education</h1>
+</header>
+
+<main>
+  <h1 class="page-title">How Education Money Is Spent</h1>
+  <p class="page-sub">Explore how per-pupil spending is broken down across categories — and see how your state compares to others.</p>
+
+  <!-- TOOL 1: STATE COMPARE -->
+  <div class="section-header">
+    <div class="section-num">1</div>
+    <div>
+      <div class="section-title">Compare Two States</div>
+      <div class="section-sub">See how spending priorities differ between any two states</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="state-selectors">
+      <div class="state-select-wrap">
+        <label>State A</label>
+        <select id="stateA" onchange="renderCompare()"></select>
+      </div>
+      <div class="vs-badge">VS</div>
+      <div class="state-select-wrap">
+        <label>State B</label>
+        <select id="stateB" onchange="renderCompare()"></select>
+      </div>
+    </div>
+    <div class="compare-chart" id="compareChart"></div>
+    <div class="compare-legend" id="compareLegend"></div>
+  </div>
+
+  <!-- TOOL 2: SLIDER -->
+  <div class="section-header">
+    <div class="section-num">2</div>
+    <div>
+      <div class="section-title">Dollar Breakdown Explorer</div>
+      <div class="section-sub">See exactly how each dollar is spent — and adjust allocations to explore tradeoffs</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="slider-intro">
+      <label>Explore spending for:</label>
+      <select id="sliderState" onchange="loadSliderState()"></select>
+      <div class="total-display">Total: <span id="sliderTotal">$0</span> / pupil</div>
+    </div>
+    <div class="slider-grid" id="sliderGrid"></div>
+    <div class="donut-wrap">
+      <svg class="donut-svg" id="donutSvg" width="180" height="180" viewBox="0 0 180 180"></svg>
+      <div class="donut-legend" id="donutLegend"></div>
+    </div>
+  </div>
+
+  <p class="source">Source: U.S. Census Bureau, 2024 Annual Survey of School System Finances. Spending breakdowns estimated from national category averages applied to state totals.</p>
+</main>
+
+<footer>
+  &copy; 2026 Bridging the Gap in Education Initiative &mdash; All data for advocacy and informational purposes.
+</footer>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────────
+// Per-pupil spend by state (FY2024, Census Bureau)
+const stateTotals = {
+  "Alabama":13598,"Alaska":20340,"Arizona":12003,"Arkansas":13873,
+  "California":20233,"Colorado":15897,"Connecticut":25801,"Delaware":22201,
+  "Florida":12689,"Georgia":15833,"Hawaii":23878,"Idaho":11060,
+  "Illinois":20253,"Indiana":13622,"Iowa":14369,"Kansas":14847,
+  "Kentucky":14596,"Louisiana":14645,"Maine":19962,"Maryland":20208,
+  "Massachusetts":22947,"Michigan":18314,"Minnesota":17098,"Mississippi":12093,
+  "Missouri":14241,"Montana":13656,"Nebraska":16147,"Nevada":13768,
+  "New Hampshire":22978,"New Jersey":26280,"New Mexico":17844,"New York":30012,
+  "North Carolina":12995,"North Dakota":17102,"Ohio":17257,"Oklahoma":12162,
+  "Oregon":17161,"Pennsylvania":21091,"Rhode Island":22110,"South Carolina":15060,
+  "South Dakota":12828,"Tennessee":12197,"Texas":12444,"Utah":11347,
+  "Vermont":28818,"Virginia":17104,"Washington":18564,"West Virginia":14575,
+  "Wisconsin":15790,"Wyoming":20521
+};
+
+// National average % breakdown by category (from NCES/Census data)
+const categories = [
+  { key:"instruction",    label:"Instruction",             desc:"Teacher salaries, classroom materials",  color:"var(--c1)", pct:0.588 },
+  { key:"support",        label:"Student Support",         desc:"Counselors, nurses, social workers",     color:"var(--c2)", pct:0.072 },
+  { key:"admin",          label:"Administration",          desc:"Principals, district management",        color:"var(--c3)", pct:0.061 },
+  { key:"operations",     label:"Operations & Maintenance",desc:"Facilities, custodial, utilities",       color:"var(--c4)", pct:0.082 },
+  { key:"transport",      label:"Transportation",          desc:"School buses and student transit",       color:"var(--c5)", pct:0.042 },
+  { key:"food",           label:"Food Services",           desc:"School meals and nutrition programs",    color:"var(--c6)", pct:0.038 },
+  { key:"technology",     label:"Technology",              desc:"Devices, software, IT infrastructure",  color:"var(--c7)", pct:0.045 },
+  { key:"extracurricular",label:"Extracurricular",         desc:"Sports, arts, clubs",                   color:"var(--c8)", pct:0.028 },
+  { key:"specialed",      label:"Special Education",       desc:"Services for students with disabilities",color:"var(--c9)", pct:0.030 },
+  { key:"other",          label:"Other",                   desc:"Debt, community services, misc",        color:"var(--c10)",pct:0.014 }
+];
+
+const states = Object.keys(stateTotals).sort();
+
+// Populate selects
+function populateSelects() {
+  const selects = ["stateA","stateB","sliderState"];
+  selects.forEach(id => {
+    const el = document.getElementById(id);
+    states.forEach((s, i) => {
+      const opt = document.createElement("option");
+      opt.value = s; opt.textContent = s;
+      el.appendChild(opt);
+    });
+  });
+  document.getElementById("stateA").value = "Texas";
+  document.getElementById("stateB").value = "New York";
+  document.getElementById("sliderState").value = "Texas";
+}
+
+// ── COMPARE CHART ─────────────────────────────────────────────────────────────
+function getBreakdown(state) {
+  const total = stateTotals[state];
+  return categories.map(c => ({ ...c, dollars: Math.round(total * c.pct) }));
+}
+
+function renderCompare() {
+  const sA = document.getElementById("stateA").value;
+  const sB = document.getElementById("stateB").value;
+  const dA = getBreakdown(sA);
+  const dB = getBreakdown(sB);
+  const maxVal = Math.max(...dA.map(d=>d.dollars), ...dB.map(d=>d.dollars));
+
+  const chart = document.getElementById("compareChart");
+  chart.innerHTML = "";
+
+  // Header row
+  const header = document.createElement("div");
+  header.className = "compare-row";
+  header.style.marginBottom = "8px";
+  header.innerHTML = `
+    <div></div>
+    <div style="font-size:0.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em">${sA}</div>
+    <div></div>
+    <div style="font-size:0.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em">${sB}</div>
+    <div></div>
+  `;
+  chart.appendChild(header);
+
+  dA.forEach((cat, i) => {
+    const row = document.createElement("div");
+    row.className = "compare-row";
+    const wA = Math.round((dA[i].dollars / maxVal) * 100);
+    const wB = Math.round((dB[i].dollars / maxVal) * 100);
+    row.innerHTML = `
+      <div class="cat-label">${cat.label}</div>
+      <div class="bar-wrap">
+        <div class="bar-fill" style="width:${wA}%;background:${cat.color}">
+          <span class="bar-val">$${dA[i].dollars.toLocaleString()}</span>
+        </div>
+      </div>
+      <div class="bar-pct">${(dA[i].pct*100).toFixed(1)}%</div>
+      <div class="bar-wrap">
+        <div class="bar-fill" style="width:${wB}%;background:${cat.color};opacity:0.65">
+          <span class="bar-val">$${dB[i].dollars.toLocaleString()}</span>
+        </div>
+      </div>
+      <div class="bar-pct">${(dB[i].pct*100).toFixed(1)}%</div>
+    `;
+    chart.appendChild(row);
+  });
+
+  // Totals row
+  const totRow = document.createElement("div");
+  totRow.className = "compare-row";
+  totRow.style.borderTop = "1px solid var(--border)";
+  totRow.style.paddingTop = "12px";
+  totRow.style.marginTop = "4px";
+  totRow.innerHTML = `
+    <div class="cat-label" style="font-weight:700;color:var(--dark)">Total</div>
+    <div style="font-size:0.9rem;font-weight:800;color:var(--primary)">$${stateTotals[sA].toLocaleString()}</div>
+    <div></div>
+    <div style="font-size:0.9rem;font-weight:800;color:var(--primary)">$${stateTotals[sB].toLocaleString()}</div>
+    <div style="font-size:0.8rem;font-weight:700;color:${stateTotals[sA]>stateTotals[sB]?"#16a34a":"#dc2626"}">
+      ${stateTotals[sA]>stateTotals[sB]?"+":"-"}$${Math.abs(stateTotals[sA]-stateTotals[sB]).toLocaleString()} diff
+    </div>
+  `;
+  chart.appendChild(totRow);
+
+  // Legend
+  document.getElementById("compareLegend").innerHTML = `
+    <div class="legend-state"><div class="legend-dot" style="background:var(--primary)"></div>${sA} — $${stateTotals[sA].toLocaleString()}/pupil</div>
+    <div class="legend-state"><div class="legend-dot" style="background:var(--primary);opacity:0.45"></div>${sB} — $${stateTotals[sB].toLocaleString()}/pupil</div>
+    <div style="font-size:0.78rem;color:var(--muted);margin-left:auto">Percentages reflect national average category breakdown applied to each state's total</div>
+  `;
+}
+
+// ── SLIDER TOOL ───────────────────────────────────────────────────────────────
+let sliderValues = {};
+
+function loadSliderState() {
+  const state = document.getElementById("sliderState").value;
+  const total = stateTotals[state];
+  sliderValues = {};
+  categories.forEach(c => { sliderValues[c.key] = Math.round(total * c.pct); });
+  renderSliders();
+}
+
+function renderSliders() {
+  const state = document.getElementById("sliderState").value;
+  const total = stateTotals[state];
+  const grid = document.getElementById("sliderGrid");
+  grid.innerHTML = "";
+
+  categories.forEach(cat => {
+    const val = sliderValues[cat.key];
+    const pct = Math.round((val / total) * 100);
+    const row = document.createElement("div");
+    row.className = "slider-row";
+    row.innerHTML = `
+      <div class="slider-label">${cat.label}<span>${cat.desc}</span></div>
+      <input type="range" min="0" max="${total}" step="50" value="${val}"
+        data-key="${cat.key}" oninput="updateSlider(this)"/>
+      <div class="slider-dollar" id="dollar-${cat.key}">$${val.toLocaleString()}</div>
+      <div class="slider-pct-pill" id="pill-${cat.key}" style="background:${cat.color}">${pct}%</div>
+    `;
+    grid.appendChild(row);
+
+    // color the range track
+    const input = row.querySelector("input");
+    colorTrack(input, cat.color);
+  });
+
+  updateDonut();
+  updateTotal();
+}
+
+function colorTrack(input, color) {
+  const pct = (input.value / input.max) * 100;
+  input.style.background = `linear-gradient(to right, ${color} 0%, ${color} ${pct}%, var(--border) ${pct}%, var(--border) 100%)`;
+}
+
+function updateSlider(input) {
+  const key = input.dataset.key;
+  const cat = categories.find(c => c.key === key);
+  sliderValues[key] = parseInt(input.value);
+  const state = document.getElementById("sliderState").value;
+  const total = stateTotals[state];
+  const pct = Math.round((sliderValues[key] / total) * 100);
+  document.getElementById("dollar-" + key).textContent = "$" + sliderValues[key].toLocaleString();
+  document.getElementById("pill-" + key).textContent = pct + "%";
+  colorTrack(input, cat.color);
+  updateDonut();
+  updateTotal();
+}
+
+function updateTotal() {
+  const sum = Object.values(sliderValues).reduce((a, b) => a + b, 0);
+  document.getElementById("sliderTotal").textContent = "$" + sum.toLocaleString();
+}
+
+function updateDonut() {
+  const total = Object.values(sliderValues).reduce((a, b) => a + b, 0);
+  if (total === 0) return;
+
+  const svg = document.getElementById("donutSvg");
+  const cx = 90, cy = 90, r = 70, innerR = 44;
+  let html = "";
+  let startAngle = -Math.PI / 2;
+
+  categories.forEach(cat => {
+    const val = sliderValues[cat.key];
+    const angle = (val / total) * 2 * Math.PI;
+    const endAngle = startAngle + angle;
+    const x1 = cx + r * Math.cos(startAngle);
+    const y1 = cy + r * Math.sin(startAngle);
+    const x2 = cx + r * Math.cos(endAngle);
+    const y2 = cy + r * Math.sin(endAngle);
+    const ix1 = cx + innerR * Math.cos(startAngle);
+    const iy1 = cy + innerR * Math.sin(startAngle);
+    const ix2 = cx + innerR * Math.cos(endAngle);
+    const iy2 = cy + innerR * Math.sin(endAngle);
+    const large = angle > Math.PI ? 1 : 0;
+    const colorVal = getComputedStyle(document.documentElement).getPropertyValue(cat.color.replace("var(","").replace(")","")).trim() || cat.color;
+
+    html += `<path d="M${x1},${y1} A${r},${r} 0 ${large},1 ${x2},${y2} L${ix2},${iy2} A${innerR},${innerR} 0 ${large},0 ${ix1},${iy1} Z"
+      fill="${cat.color}" opacity="0.9">
+      <title>${cat.label}: $${val.toLocaleString()}</title>
+    </path>`;
+    startAngle = endAngle;
+  });
+
+  // center text
+  const state = document.getElementById("sliderState").value;
+  html += `<text x="90" y="84" text-anchor="middle" font-family="Inter" font-size="11" font-weight="600" fill="var(--muted)">Total</text>`;
+  html += `<text x="90" y="100" text-anchor="middle" font-family="Inter" font-size="13" font-weight="800" fill="var(--dark)">$${stateTotals[state].toLocaleString()}</text>`;
+
+  svg.innerHTML = html;
+
+  // Legend
+  const legend = document.getElementById("donutLegend");
+  legend.innerHTML = categories.map(cat => {
+    const val = sliderValues[cat.key];
+    const pct = ((val / total) * 100).toFixed(1);
+    return `<div class="donut-legend-item">
+      <div class="dot" style="background:${cat.color}"></div>
+      <span class="name">${cat.label}</span>
+      <span class="pct">${pct}%</span>
+    </div>`;
+  }).join("");
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+populateSelects();
+renderCompare();
+loadSliderState();
+</script>
+</body>
+</html>
