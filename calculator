@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>What Could the Gap Buy?</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --dark: #1e293b;
+      --light-bg: #f8fafc;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --white: #ffffff;
+      --surface: #f1f5f9;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: var(--light-bg); color: var(--dark); min-height: 100vh; }
+
+    header {
+      background: white; border-bottom: 1px solid var(--border);
+      padding: 20px 40px; display: flex; align-items: center; gap: 16px;
+    }
+    .badge {
+      background: rgba(79,70,229,0.1); color: var(--primary);
+      padding: 6px 14px; border-radius: 100px; font-size: 0.78rem;
+      font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; flex-shrink: 0;
+    }
+    header h1 {
+      font-size: 1.3rem; font-weight: 800;
+      background: linear-gradient(to right, #1e293b, #4f46e5);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+
+    main { max-width: 1000px; margin: 0 auto; padding: 40px 24px 60px; }
+    .page-title { font-size: 2rem; font-weight: 900; margin-bottom: 8px; color: var(--dark); }
+    .page-sub { color: var(--muted); font-size: 1rem; margin-bottom: 40px; max-width: 620px; line-height: 1.7; }
+
+    .controls-card {
+      background: white; border: 1px solid var(--border);
+      border-radius: 20px; padding: 28px 32px; margin-bottom: 28px;
+    }
+    .controls-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .ctrl-wrap { display: flex; flex-direction: column; gap: 7px; }
+    .ctrl-label { font-size: 0.72rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; }
+    .ctrl-wrap select {
+      padding: 12px 36px 12px 14px; border-radius: 12px; border: 1.5px solid var(--border);
+      font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 600; color: var(--dark);
+      background: white; cursor: pointer; appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 14px center; transition: border-color 0.2s;
+    }
+    .ctrl-wrap select:focus { outline: none; border-color: var(--primary); }
+
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 28px; }
+    .stat-card { background: white; border: 1px solid var(--border); border-radius: 14px; padding: 18px 20px; }
+    .stat-label { font-size: 0.72rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+    .stat-val { font-size: 1.5rem; font-weight: 900; color: var(--primary); line-height: 1; }
+    .stat-val.red { color: #dc2626; }
+    .stat-sub { font-size: 0.72rem; color: var(--muted); margin-top: 4px; }
+
+    .above-avg {
+      background: rgba(22,163,74,0.08); border: 1px solid rgba(22,163,74,0.2);
+      border-radius: 16px; padding: 24px 28px; margin-bottom: 28px;
+      display: flex; align-items: center; gap: 16px;
+    }
+    .above-icon { font-size: 2rem; color: #16a34a; flex-shrink: 0; }
+    .above-title { font-size: 1rem; font-weight: 700; color: #15803d; margin-bottom: 4px; }
+    .above-sub { font-size: 0.85rem; color: #16a34a; }
+
+    .section-title { font-size: 1rem; font-weight: 700; color: var(--dark); margin-bottom: 14px; }
+
+    .items-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 28px; }
+    .item-card {
+      background: white; border: 1px solid var(--border); border-radius: 16px;
+      padding: 22px 20px; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .item-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(79,70,229,0.1); border-color: var(--primary); }
+    .item-icon-wrap {
+      width: 48px; height: 48px; border-radius: 12px;
+      background: rgba(79,70,229,0.1); display: flex; align-items: center;
+      justify-content: center; margin-bottom: 14px;
+    }
+    .item-icon-wrap svg { width: 24px; height: 24px; stroke: var(--primary); fill: none; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+    .item-count { font-size: 1.8rem; font-weight: 900; color: var(--primary); line-height: 1; margin-bottom: 4px; }
+    .item-name { font-size: 0.88rem; font-weight: 700; color: var(--dark); margin-bottom: 10px; }
+    .item-divider { height: 1px; background: var(--border); margin-bottom: 10px; }
+    .item-cost { font-size: 0.72rem; color: var(--muted); line-height: 1.5; }
+
+    .source-note { font-size: 0.72rem; color: var(--muted); line-height: 1.65; padding-top: 20px; border-top: 1px solid var(--border); }
+
+    footer { text-align: center; padding: 32px; font-size: 0.8rem; color: var(--muted); border-top: 1px solid var(--border); background: white; }
+
+    @media (max-width: 600px) {
+      header { padding: 16px 20px; }
+      main { padding: 24px 16px 48px; }
+      .controls-grid { grid-template-columns: 1fr; }
+      .items-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <span class="badge">2026 Initiative</span>
+  <h1>Bridging the Gap in Education</h1>
+</header>
+
+<main>
+  <h1 class="page-title">What could the gap buy?</h1>
+  <p class="page-sub">The funding gap isn't just a number — it represents real things students are missing. Select a state and school size to see what the gap could have funded.</p>
+
+  <div class="controls-card">
+    <div class="controls-grid">
+      <div class="ctrl-wrap">
+        <span class="ctrl-label">Select a state</span>
+        <select id="state" onchange="calc()"></select>
+      </div>
+      <div class="ctrl-wrap">
+        <span class="ctrl-label">Number of students</span>
+        <select id="students" onchange="calc()">
+          <option value="1">1 student</option>
+          <option value="30">1 classroom (30 students)</option>
+          <option value="500" selected>1 small school (500 students)</option>
+          <option value="2000">1 large school (2,000 students)</option>
+          <option value="10000">1 district (10,000 students)</option>
+          <option value="100000">Large district (100,000 students)</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats-grid" id="stats"></div>
+  <div id="above-avg-msg" style="display:none" class="above-avg">
+    <div class="above-icon">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    </div>
+    <div>
+      <div class="above-title" id="above-title">State spends above the national average</div>
+      <div class="above-sub" id="above-sub"></div>
+    </div>
+  </div>
+
+  <div id="items-section">
+    <div class="section-title">The total gap could have funded...</div>
+    <div class="items-grid" id="items"></div>
+  </div>
+
+  <p class="source-note">
+    <strong>Sources:</strong> Per-pupil totals from U.S. Census Bureau FY2024 Annual Survey of School System Finances. National average: $17,619.
+    Cost estimates: teacher salary $68,469 (BLS 2024), school counselor $63,606 (BLS 2024), Chromebook $350, school lunch $3.81/meal (USDA 2024), textbook set $150/student, after-school program $1,200/student/year.
+  </p>
+</main>
+
+<footer>&copy; 2026 Bridging the Gap in Education Initiative &mdash; All data for advocacy and informational purposes.</footer>
+
+<script>
+const totals = {
+  "Alabama":13598,"Alaska":20340,"Arizona":12003,"Arkansas":13873,
+  "California":20233,"Colorado":15897,"Connecticut":26316,"Delaware":22201,
+  "Florida":12689,"Georgia":15833,"Hawaii":23878,"Idaho":11060,
+  "Illinois":20253,"Indiana":13622,"Iowa":14369,"Kansas":14847,
+  "Kentucky":14596,"Louisiana":14645,"Maine":19962,"Maryland":20208,
+  "Massachusetts":22947,"Michigan":18314,"Minnesota":17098,"Mississippi":12324,
+  "Missouri":14241,"Montana":13656,"Nebraska":16147,"Nevada":13768,
+  "New Hampshire":22978,"New Jersey":27234,"New Mexico":17844,"New York":31918,
+  "North Carolina":12995,"North Dakota":17102,"Ohio":17257,"Oklahoma":12162,
+  "Oregon":17161,"Pennsylvania":21091,"Rhode Island":22110,"South Carolina":15060,
+  "South Dakota":12828,"Tennessee":12197,"Texas":12444,"Utah":11347,
+  "Vermont":28818,"Virginia":17104,"Washington":18564,"West Virginia":14575,
+  "Wisconsin":15790,"Wyoming":20521
+};
+const NAT_AVG = 17619;
+
+const itemDefs = [
+  {
+    name:"Teachers",
+    cost:68469,
+    unit:"avg teacher salary (BLS 2024)",
+    svg:'<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>'
+  },
+  {
+    name:"School counselors",
+    cost:63606,
+    unit:"avg counselor salary (BLS 2024)",
+    svg:'<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>'
+  },
+  {
+    name:"Student laptops",
+    cost:350,
+    unit:"Chromebook per device",
+    svg:'<rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>'
+  },
+  {
+    name:"School lunches",
+    cost:3.81,
+    unit:"per meal (USDA 2024)",
+    svg:'<path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/>'
+  },
+  {
+    name:"Textbook sets",
+    cost:150,
+    unit:"full set per student",
+    svg:'<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>'
+  },
+  {
+    name:"After-school spots",
+    cost:1200,
+    unit:"per student per year",
+    svg:'<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>'
+  }
+];
+
+function fmt$(n) { return "$"+Math.round(n).toLocaleString(); }
+function fmtCount(n) {
+  if (n < 1) return "< 1";
+  if (n >= 1000000) return (n/1000000).toFixed(1)+"M";
+  if (n >= 1000) return Math.round(n/100)/10 + "k";
+  return Math.round(n).toLocaleString();
+}
+
+function populate() {
+  const sel = document.getElementById("state");
+  Object.keys(totals).sort().forEach(s => {
+    const o = document.createElement("option");
+    o.value = s; o.textContent = s; sel.appendChild(o);
+  });
+  sel.value = "Texas";
+}
+
+function calc() {
+  const state = document.getElementById("state").value;
+  const students = parseInt(document.getElementById("students").value);
+  const spend = totals[state];
+  const gap = NAT_AVG - spend;
+  const totalGap = gap * students;
+  const ranked = Object.keys(totals).sort((a,b)=>totals[b]-totals[a]);
+  const r = ranked.indexOf(state)+1;
+  const suffix = r===1?"st":r===2?"nd":r===3?"rd":"th";
+
+  const statsEl = document.getElementById("stats");
+  statsEl.innerHTML = `
+    <div class="stat-card">
+      <div class="stat-label">${state} per-pupil spend</div>
+      <div class="stat-val">${fmt$(spend)}</div>
+      <div class="stat-sub">Ranked ${r}${suffix} of 50 states</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">National average</div>
+      <div class="stat-val">$17,619</div>
+      <div class="stat-sub">FY2024, Census Bureau</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Gap per student</div>
+      <div class="stat-val ${gap > 0 ? 'red' : ''}">${gap > 0 ? fmt$(gap) : fmt$(Math.abs(gap))+" above"}</div>
+      <div class="stat-sub">${gap > 0 ? "below national average" : "above national average"}</div>
+    </div>
+    ${gap > 0 ? `<div class="stat-card">
+      <div class="stat-label">Total gap (${students.toLocaleString()} students)</div>
+      <div class="stat-val red">${fmt$(totalGap)}</div>
+      <div class="stat-sub">per year</div>
+    </div>` : ""}
+  `;
+
+  const aboveMsg = document.getElementById("above-avg-msg");
+  const itemsSection = document.getElementById("items-section");
+
+  if (gap <= 0) {
+    aboveMsg.style.display = "flex";
+    itemsSection.style.display = "none";
+    document.getElementById("above-title").textContent = `${state} spends above the national average`;
+    document.getElementById("above-sub").textContent = `${state} spends ${fmt$(Math.abs(gap))} more per pupil than the national average — ranked ${r}${suffix} of 50 states.`;
+    return;
+  }
+
+  aboveMsg.style.display = "none";
+  itemsSection.style.display = "block";
+
+  const itemsEl = document.getElementById("items");
+  itemsEl.innerHTML = "";
+  itemDefs.forEach(item => {
+    const count = totalGap / item.cost;
+    const card = document.createElement("div");
+    card.className = "item-card";
+    card.innerHTML = `
+      <div class="item-icon-wrap">
+        <svg viewBox="0 0 24 24">${item.svg}</svg>
+      </div>
+      <div class="item-count">${fmtCount(count)}</div>
+      <div class="item-name">${item.name}</div>
+      <div class="item-divider"></div>
+      <div class="item-cost">${fmt$(item.cost)} ${item.unit}</div>
+    `;
+    itemsEl.appendChild(card);
+  });
+}
+
+populate();
+calc();
+</script>
+</body>
+</html>
