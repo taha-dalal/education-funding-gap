@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>How Education Money Is Spent</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-b: #818cf8;
+      --dark: #1e293b;
+      --light-bg: #f8fafc;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --white: #ffffff;
+      --surface: #f1f5f9;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: var(--light-bg); color: var(--dark); min-height: 100vh; }
+
+    header {
+      background: white; border-bottom: 1px solid var(--border);
+      padding: 20px 40px; display: flex; align-items: center; gap: 16px;
+    }
+    .badge {
+      background: rgba(79,70,229,0.1); color: var(--primary);
+      padding: 6px 14px; border-radius: 100px; font-size: 0.78rem;
+      font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; flex-shrink: 0;
+    }
+    header h1 {
+      font-size: 1.3rem; font-weight: 800;
+      background: linear-gradient(to right, #1e293b, #4f46e5);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+
+    main { max-width: 1000px; margin: 0 auto; padding: 40px 24px 60px; }
+    .page-title { font-size: 2rem; font-weight: 900; margin-bottom: 8px; color: var(--dark); }
+    .page-sub { color: var(--muted); font-size: 1rem; margin-bottom: 40px; max-width: 620px; line-height: 1.7; }
+
+    .selectors { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+    .select-wrap { display: flex; flex-direction: column; gap: 6px; }
+    .select-wrap label { font-size: 0.72rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; }
+    .select-wrap select {
+      padding: 12px 36px 12px 14px; border-radius: 12px; border: 1.5px solid var(--border);
+      font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 600; color: var(--dark);
+      background: white; cursor: pointer; appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 14px center; transition: border-color 0.2s;
+    }
+    .select-wrap select:focus { outline: none; border-color: var(--primary); }
+
+    .state-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 32px; }
+    .state-card { background: white; border: 1px solid var(--border); border-radius: 16px; padding: 20px 24px; }
+    .state-card.a { border-left: 4px solid var(--primary); }
+    .state-card.b { border-left: 4px solid var(--primary-b); }
+    .sc-dot { width: 10px; height: 10px; border-radius: 2px; display: inline-block; margin-right: 8px; vertical-align: middle; }
+    .sc-name { font-size: 0.95rem; font-weight: 700; color: var(--dark); }
+    .sc-total { font-size: 2rem; font-weight: 900; color: var(--primary); margin: 8px 0 4px; line-height: 1; }
+    .sc-rank { font-size: 0.75rem; color: var(--muted); }
+
+    .cats { display: flex; flex-direction: column; gap: 12px; }
+    .cat-card {
+      background: white; border: 1px solid var(--border); border-radius: 16px;
+      padding: 20px 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: center;
+    }
+    .cat-name { font-size: 0.88rem; font-weight: 700; color: var(--dark); margin-bottom: 2px; }
+    .cat-desc { font-size: 0.72rem; color: var(--muted); margin-bottom: 12px; }
+    .bar-row { margin-bottom: 8px; }
+    .bar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+    .bar-state-lbl { font-size: 0.72rem; color: var(--muted); }
+    .bar-amount { font-size: 0.78rem; font-weight: 600; color: var(--dark); }
+    .bar-track { height: 8px; background: var(--surface); border-radius: 4px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 4px; transition: width 0.55s cubic-bezier(0.16,1,0.3,1); }
+    .cat-right { text-align: right; }
+    .stat-lbl { font-size: 0.72rem; color: var(--muted); margin-bottom: 4px; }
+    .stat-val { font-size: 1.1rem; font-weight: 800; color: var(--dark); margin-bottom: 12px; }
+    .diff-val { font-size: 1.3rem; font-weight: 900; color: var(--dark); margin-bottom: 2px; }
+    .diff-who { font-size: 0.72rem; color: var(--muted); }
+
+    .total-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+      padding: 24px 28px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: center; margin-top: 4px;
+    }
+    .tot-label { font-size: 0.72rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px; }
+    .tot-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .tot-state { font-size: 0.82rem; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+    .tot-val { font-size: 1rem; font-weight: 800; color: var(--dark); }
+    .tot-right { text-align: right; }
+    .gap-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+    .gap-val { font-size: 2.2rem; font-weight: 900; color: #dc2626; line-height: 1; margin-bottom: 6px; }
+    .gap-sub { font-size: 0.75rem; color: var(--muted); }
+
+    .source-note { font-size: 0.72rem; color: var(--muted); line-height: 1.65; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border); }
+
+    footer { text-align: center; padding: 32px; font-size: 0.8rem; color: var(--muted); border-top: 1px solid var(--border); background: white; }
+
+    @media (max-width: 640px) {
+      header { padding: 16px 20px; }
+      main { padding: 24px 16px 48px; }
+      .selectors, .state-cards { grid-template-columns: 1fr; }
+      .cat-card { grid-template-columns: 1fr; }
+      .cat-right { text-align: left; border-top: 1px solid var(--border); padding-top: 12px; }
+      .total-card { grid-template-columns: 1fr; }
+      .tot-right { text-align: left; border-top: 1px solid var(--border); padding-top: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <span class="badge">2026 Initiative</span>
+  <h1>Bridging the Gap in Education</h1>
+</header>
+
+<main>
+  <h1 class="page-title">How education money is spent</h1>
+  <p class="page-sub">Compare how two states allocate their per-pupil education dollars across 8 spending categories. Select any two states to see the breakdown side by side.</p>
+
+  <div class="selectors">
+    <div class="select-wrap">
+      <label>State A</label>
+      <select id="sa" onchange="render()"></select>
+    </div>
+    <div class="select-wrap">
+      <label>State B</label>
+      <select id="sb" onchange="render()"></select>
+    </div>
+  </div>
+
+  <div class="state-cards">
+    <div class="state-card a" id="cardA"></div>
+    <div class="state-card b" id="cardB"></div>
+  </div>
+
+  <div class="cats" id="cats"></div>
+
+  <p class="source-note"><strong>Sources:</strong> Per-pupil totals from U.S. Census Bureau, 2024 Annual Survey of School System Finances (released May 7, 2026). Category percentages based on NCES FY2024 national averages — Instruction 58.8%, Operations &amp; Maintenance 9.3%, Student Support 7.2%, Other Support 5.7%, School Administration 5.6%, Instructional Staff Support 5.4%, Transportation 4.2%, Food Services 3.8% — applied to each state's total, as state-level category breakdowns are not published individually.</p>
+</main>
+
+<footer>&copy; 2026 Bridging the Gap in Education Initiative &mdash; All data for advocacy and informational purposes.</footer>
+
+<script>
+const totals = {
+  "Alabama":13598,"Alaska":20340,"Arizona":12003,"Arkansas":13873,
+  "California":20233,"Colorado":15897,"Connecticut":26316,"Delaware":22201,
+  "Florida":12689,"Georgia":15833,"Hawaii":23878,"Idaho":11060,
+  "Illinois":20253,"Indiana":13622,"Iowa":14369,"Kansas":14847,
+  "Kentucky":14596,"Louisiana":14645,"Maine":19962,"Maryland":20208,
+  "Massachusetts":22947,"Michigan":18314,"Minnesota":17098,"Mississippi":12324,
+  "Missouri":14241,"Montana":13656,"Nebraska":16147,"Nevada":13768,
+  "New Hampshire":22978,"New Jersey":27234,"New Mexico":17844,"New York":31918,
+  "North Carolina":12995,"North Dakota":17102,"Ohio":17257,"Oklahoma":12162,
+  "Oregon":17161,"Pennsylvania":21091,"Rhode Island":22110,"South Carolina":15060,
+  "South Dakota":12828,"Tennessee":12197,"Texas":12444,"Utah":11347,
+  "Vermont":28818,"Virginia":17104,"Washington":18564,"West Virginia":14575,
+  "Wisconsin":15790,"Wyoming":20521
+};
+
+const cats = [
+  { name:"Instruction",              desc:"Teacher salaries & classroom costs",   pct:0.588, colA:"#4f46e5", colB:"#818cf8" },
+  { name:"Operations & maintenance", desc:"Facilities, utilities, custodial",     pct:0.093, colA:"#ea580c", colB:"#fb923c" },
+  { name:"Student support",          desc:"Counselors, nurses, social workers",   pct:0.072, colA:"#7c3aed", colB:"#a78bfa" },
+  { name:"Other support services",   desc:"General admin, business, misc.",       pct:0.057, colA:"#475569", colB:"#94a3b8" },
+  { name:"School administration",    desc:"Principals & school-level mgmt.",      pct:0.056, colA:"#db2777", colB:"#f472b6" },
+  { name:"Instructional staff supp.",desc:"Curriculum & professional development",pct:0.054, colA:"#9333ea", colB:"#c084fc" },
+  { name:"Transportation",           desc:"School buses & student transit",       pct:0.042, colA:"#16a34a", colB:"#4ade80" },
+  { name:"Food services",            desc:"School meals & nutrition programs",    pct:0.038, colA:"#0891b2", colB:"#22d3ee" }
+];
+
+const states = Object.keys(totals).sort();
+const ranked = [...states].sort((a,b) => totals[b]-totals[a]);
+function rank(s) { return "#"+(ranked.indexOf(s)+1)+" of 50 states"; }
+function fmt(n) { return "$"+Math.round(n).toLocaleString(); }
+
+function populate() {
+  states.forEach(s => {
+    ["sa","sb"].forEach(id => {
+      const o = document.createElement("option");
+      o.value = s; o.textContent = s;
+      document.getElementById(id).appendChild(o);
+    });
+  });
+  document.getElementById("sa").value = "Texas";
+  document.getElementById("sb").value = "New York";
+}
+
+function buildCard(el, state, dot) {
+  el.innerHTML = `
+    <div style="display:flex;align-items:center;margin-bottom:8px;">
+      <span class="sc-dot" style="background:${dot}"></span>
+      <span class="sc-name">${state}</span>
+    </div>
+    <div class="sc-total">${fmt(totals[state])}</div>
+    <div class="sc-rank">per pupil &middot; ${rank(state)}</div>
+  `;
+}
+
+function render() {
+  const sA = document.getElementById("sa").value;
+  const sB = document.getElementById("sb").value;
+  const tA = totals[sA], tB = totals[sB];
+
+  buildCard(document.getElementById("cardA"), sA, "#4f46e5");
+  buildCard(document.getElementById("cardB"), sB, "#818cf8");
+
+  const maxDollar = Math.max(tA, tB);
+  const container = document.getElementById("cats");
+  container.innerHTML = "";
+
+  cats.forEach(cat => {
+    const vA = Math.round(tA * cat.pct);
+    const vB = Math.round(tB * cat.pct);
+    const wA = Math.round((vA / maxDollar) * 100);
+    const wB = Math.round((vB / maxDollar) * 100);
+    const diff = Math.abs(vA - vB);
+    const higher = vA >= vB ? sA : sB;
+
+    const card = document.createElement("div");
+    card.className = "cat-card";
+    card.innerHTML = `
+      <div>
+        <div class="cat-name">${cat.name}</div>
+        <div class="cat-desc">${cat.desc}</div>
+        <div class="bar-row">
+          <div class="bar-header">
+            <span class="bar-state-lbl">${sA}</span>
+            <span class="bar-amount">${fmt(vA)}</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="width:${wA}%;background:${cat.colA}"></div></div>
+        </div>
+        <div class="bar-row" style="margin-bottom:0">
+          <div class="bar-header">
+            <span class="bar-state-lbl">${sB}</span>
+            <span class="bar-amount">${fmt(vB)}</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="width:${wB}%;background:${cat.colB}"></div></div>
+        </div>
+      </div>
+      <div class="cat-right">
+        <div class="stat-lbl">Share of budget</div>
+        <div class="stat-val">${(cat.pct*100).toFixed(1)}%</div>
+        <div class="stat-lbl">Difference</div>
+        <div class="diff-val">${fmt(diff)}</div>
+        <div class="diff-who">${higher} spends more</div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+
+  const diff = Math.abs(tA - tB);
+  const higher = tA >= tB ? sA : sB;
+  const tot = document.createElement("div");
+  tot.className = "total-card";
+  tot.innerHTML = `
+    <div>
+      <div class="tot-label">Total per pupil</div>
+      <div class="tot-row">
+        <span class="tot-state"><span style="width:10px;height:10px;border-radius:2px;background:#4f46e5;display:inline-block"></span>${sA}</span>
+        <span class="tot-val">${fmt(tA)}</span>
+      </div>
+      <div class="tot-row">
+        <span class="tot-state"><span style="width:10px;height:10px;border-radius:2px;background:#818cf8;display:inline-block"></span>${sB}</span>
+        <span class="tot-val">${fmt(tB)}</span>
+      </div>
+    </div>
+    <div class="tot-right">
+      <div class="gap-label">Total gap per pupil</div>
+      <div class="gap-val">${fmt(diff)}</div>
+      <div class="gap-sub">${higher} spends more per year</div>
+    </div>
+  `;
+  container.appendChild(tot);
+}
+
+populate();
+render();
+</script>
+</body>
+</html>
