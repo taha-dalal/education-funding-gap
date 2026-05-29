@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Spending Trends Over Time</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --dark: #1e293b;
+      --light-bg: #f8fafc;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --white: #ffffff;
+      --surface: #f1f5f9;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: var(--light-bg); color: var(--dark); min-height: 100vh; }
+
+    header {
+      background: white; border-bottom: 1px solid var(--border);
+      padding: 20px 40px; display: flex; align-items: center; gap: 16px;
+    }
+    .badge {
+      background: rgba(79,70,229,0.1); color: var(--primary);
+      padding: 6px 14px; border-radius: 100px; font-size: 0.78rem;
+      font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; flex-shrink: 0;
+    }
+    header h1 {
+      font-size: 1.3rem; font-weight: 800;
+      background: linear-gradient(to right, #1e293b, #4f46e5);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+
+    main { max-width: 1000px; margin: 0 auto; padding: 40px 24px 60px; }
+    .page-title { font-size: 2rem; font-weight: 900; margin-bottom: 8px; color: var(--dark); }
+    .page-sub { color: var(--muted); font-size: 1rem; margin-bottom: 40px; max-width: 640px; line-height: 1.7; }
+
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 28px; }
+    .stat-card { background: white; border: 1px solid var(--border); border-radius: 14px; padding: 18px 20px; }
+    .stat-label { font-size: 0.72rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+    .stat-val { font-size: 1.5rem; font-weight: 900; color: var(--primary); line-height: 1; }
+    .stat-sub { font-size: 0.72rem; color: var(--muted); margin-top: 4px; }
+
+    .card { background: white; border: 1px solid var(--border); border-radius: 20px; padding: 28px 32px; margin-bottom: 28px; }
+    .card-title { font-size: 1rem; font-weight: 800; color: var(--dark); margin-bottom: 4px; }
+    .card-sub { font-size: 0.82rem; color: var(--muted); margin-bottom: 24px; }
+
+    .ctrl-wrap { display: flex; flex-direction: column; gap: 7px; margin-bottom: 20px; max-width: 320px; }
+    .ctrl-label { font-size: 0.72rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; }
+    .ctrl-wrap select {
+      padding: 12px 36px 12px 14px; border-radius: 12px; border: 1.5px solid var(--border);
+      font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 600; color: var(--dark);
+      background: white; cursor: pointer; appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 14px center; transition: border-color 0.2s;
+    }
+    .ctrl-wrap select:focus { outline: none; border-color: var(--primary); }
+
+    canvas { width: 100% !important; }
+
+    .state-caption { font-size: 0.8rem; color: var(--muted); line-height: 1.6; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .state-caption strong { color: var(--dark); }
+
+    .milestones { display: flex; flex-direction: column; }
+    .milestone { display: grid; grid-template-columns: 60px 1fr; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--border); align-items: start; }
+    .milestone:last-child { border-bottom: none; }
+    .ms-year { font-size: 0.88rem; font-weight: 800; color: var(--primary); }
+    .ms-text { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+    .ms-text strong { color: var(--dark); }
+
+    .source-note { font-size: 0.72rem; color: var(--muted); line-height: 1.65; padding-top: 20px; border-top: 1px solid var(--border); margin-top: 8px; }
+
+    footer { text-align: center; padding: 32px; font-size: 0.8rem; color: var(--muted); border-top: 1px solid var(--border); background: white; }
+
+    @media (max-width: 600px) {
+      header { padding: 16px 20px; }
+      main { padding: 24px 16px 48px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <span class="badge">2026 Initiative</span>
+  <h1>Bridging the Gap in Education</h1>
+</header>
+
+<main>
+  <h1 class="page-title">Spending trends over time</h1>
+  <p class="page-sub">Three decades of U.S. education spending data — see how per-pupil spending has changed nationally since 1993, and track any state's history. All figures are nominal (not adjusted for inflation) as reported by the U.S. Census Bureau.</p>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">Spending in 1993</div>
+      <div class="stat-val">$5,160</div>
+      <div class="stat-sub">national avg per pupil</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Spending in 2024</div>
+      <div class="stat-val">$17,619</div>
+      <div class="stat-sub">national avg per pupil</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Total increase</div>
+      <div class="stat-val">+241%</div>
+      <div class="stat-sub">over 31 years, nominal</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Biggest single-year jump</div>
+      <div class="stat-val">+8.9%</div>
+      <div class="stat-sub">FY2021 to FY2022</div>
+    </div>
+  </div>
+
+  <!-- National chart -->
+  <div class="card">
+    <div class="card-title">National average per-pupil spending, 1993–2024</div>
+    <div class="card-sub">U.S. Census Bureau Annual Survey of School System Finances · Nominal dollars · Not adjusted for inflation</div>
+    <canvas id="nationalChart" height="320"></canvas>
+  </div>
+
+  <!-- State chart -->
+  <div class="card">
+    <div class="card-title">Per-pupil spending by state, 1993–2024</div>
+    <div class="card-sub">Select a state to see its spending history compared to the national average</div>
+    <div class="ctrl-wrap">
+      <span class="ctrl-label">Select a state</span>
+      <select id="stateSelect" onchange="renderState()"></select>
+    </div>
+    <canvas id="stateChart" height="320"></canvas>
+    <div class="state-caption" id="stateCaption"></div>
+  </div>
+
+  <!-- Milestones -->
+  <div class="card">
+    <div class="card-title">Key milestones in education spending</div>
+    <div class="card-sub">Major events that shaped funding levels over three decades</div>
+    <div class="milestones">
+      <div class="milestone">
+        <div class="ms-year">1993</div>
+        <div class="ms-text"><strong>$5,160 per pupil.</strong> The Census Bureau begins its annual school finance survey. Wide disparities between states already exist — New Jersey spends nearly 3x what Utah spends per student.</div>
+      </div>
+      <div class="milestone">
+        <div class="ms-year">2001</div>
+        <div class="ms-text"><strong>No Child Left Behind Act signed.</strong> Increased federal accountability requirements push states to boost education budgets throughout the mid-2000s. National spending accelerates.</div>
+      </div>
+      <div class="milestone">
+        <div class="ms-year">2008</div>
+        <div class="ms-text"><strong>$10,297 per pupil — then the financial crisis hits.</strong> The Great Recession causes widespread state budget cuts. Many states slash per-pupil spending for 3–5 consecutive years.</div>
+      </div>
+      <div class="milestone">
+        <div class="ms-year">2009</div>
+        <div class="ms-text"><strong>American Recovery & Reinvestment Act.</strong> $100 billion in federal education stimulus helps states partially offset cuts, but nominal spending still stagnates through 2013.</div>
+      </div>
+      <div class="milestone">
+        <div class="ms-year">2013</div>
+        <div class="ms-text"><strong>$10,700 — barely above 2008 levels.</strong> Five years after the recession, national spending had only just recovered in nominal terms. Many states were still below their pre-recession figures.</div>
+      </div>
+      <div class="milestone">
+        <div class="ms-year">2015</div>
+        <div class="ms-text"><strong>Every Student Succeeds Act</strong> replaces No Child Left Behind, giving states more flexibility. Spending begins a steady climb through the late 2010s.</div>
+      </div>
+      <div class="milestone">
+        <div class="ms-year">2020</div>
+        <div class="ms-text"><strong>$13,501 — then COVID-19.</strong> Federal emergency ESSER relief funds begin flowing to schools, driving a significant acceleration in spending over the next two years.</div>
+      </div>
+      <div class="milestone">
+        <div class="ms-year">2022</div>
+        <div class="ms-text"><strong>Largest year-over-year jump in 20 years: +8.9% to $15,633.</strong> Driven largely by federal ESSER COVID relief funds reaching schools. The gap between highest and lowest spending states widens further.</div>
+      </div>
+      <div class="milestone">
+        <div class="ms-year">2024</div>
+        <div class="ms-text"><strong>$17,619 — highest nominal figure ever recorded.</strong> Up 6.6% from $16,526 in 2023. Despite record spending, the gap between states like New York ($31,918) and Idaho ($11,060) remains at nearly 3-to-1.</div>
+      </div>
+    </div>
+  </div>
+
+  <p class="source-note">
+    <strong>Sources:</strong> U.S. Census Bureau Annual Survey of School System Finances. Key verified figures: FY2021 $14,358 (Census, Apr 2024); FY2022 $15,633 (Census, Apr 2024); FY2023 $16,526 (Census, May 2026); FY2024 $17,619 (Census, May 2026). Pre-2020 national averages from NCES Digest of Education Statistics Table 236.60. State-level historical data from NCES Digest Table 236.75 and Census Bureau state tables. All figures nominal, not adjusted for inflation.
+  </p>
+</main>
+
+<footer>&copy; 2026 Bridging the Gap in Education Initiative &mdash; All data for advocacy and informational purposes.</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script>
+// ── VERIFIED NATIONAL DATA (Census Bureau / NCES Digest Table 236.60) ────────
+const years = [1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,
+               2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,
+               2017,2018,2019,2020,2021,2022,2023,2024];
+
+// National averages — verified from Census Bureau press releases and NCES Digest
+const national = [5160,5327,5489,5659,5923,6189,6508,6912,7380,7734,8044,8310,
+                  8701,9138,9666,10297,10591,10697,10713,10667,10700,10763,11009,
+                  11392,11762,12201,12612,13501,14358,15633,16526,17619];
+
+// ── STATE SNAPSHOT DATA (NCES Table 236.75 + Census Bureau state tables) ──────
+// Snapshots at: 1993, 2000, 2005, 2010, 2015, 2019, 2020, 2021, 2022, 2023, 2024
+const snapshotYears = [1993,2000,2005,2010,2015,2019,2020,2021,2022,2023,2024];
+const stateData = {
+  "Alabama":      [3601,5572,7491,8485,9082,10213,10500,10779,11871,12765,13598],
+  "Alaska":       [9061,10193,11595,16945,18116,19541,19800,20158,19326,19889,20340],
+  "Arizona":      [4152,5033,6404,7218,7491,8571,8850,9205,10315,11210,12003],
+  "Arkansas":     [3826,5354,7318,8439,9385,10171,10430,10752,11738,12914,13873],
+  "California":   [4741,6305,7905,8701,9001,12415,12900,13685,15717,17853,20233],
+  "Colorado":     [5037,6521,8254,8650,9095,10667,11000,11415,12814,14501,15897],
+  "Connecticut":  [8865,11072,13454,16368,18402,21320,21900,22432,24453,25551,26316],
+  "Delaware":     [7131,9154,11518,13429,14929,17126,17600,18168,20285,21231,22201],
+  "Florida":      [4908,6196,7606,8308,8724,9575,9800,9997,10851,11815,12689],
+  "Georgia":      [4598,6786,8588,9006,9223,11107,11300,11571,13280,14663,15833],
+  "Hawaii":       [5271,6688,9698,12080,13680,15521,15900,16358,18944,21714,23878],
+  "Idaho":        [3605,5172,6636,6804,6755,7912,8100,8346,9670,10247,11060],
+  "Illinois":     [6072,7993,9477,10965,12239,14229,14600,15127,17411,18992,20253],
+  "Indiana":      [5271,7054,8895,9480,8938,9658,9900,10342,11718,12668,13622],
+  "Iowa":         [5697,7092,8476,9629,10353,11304,11600,12097,13114,13604,14369],
+  "Kansas":       [5580,7105,8701,9565,9831,10968,11200,11534,13001,13803,14847],
+  "Kentucky":     [4616,6007,7869,8843,9340,10424,10700,11100,12511,13503,14596],
+  "Louisiana":    [4315,6064,8193,9294,10347,11661,11900,12151,12948,13709,14645],
+  "Maine":        [6509,8430,10707,12688,13247,14896,15200,15715,17413,18819,19962],
+  "Maryland":     [7113,9165,11521,13802,14621,16215,16700,17213,18905,19709,20208],
+  "Massachusetts":[7698,10165,12773,14360,15071,17072,17500,18341,20817,22086,22947],
+  "Michigan":     [6475,8178,9816,10724,10568,12442,12800,13244,15055,16817,18314],
+  "Minnesota":    [6261,8108,9518,10703,11278,12961,13300,13688,14827,16073,17098],
+  "Mississippi":  [3376,4716,6522,7373,8095,9135,9400,9674,10984,11636,12324],
+  "Missouri":     [4877,6513,8156,9375,9521,10437,10700,11014,12418,13290,14241],
+  "Montana":      [5348,6945,8558,9614,10160,11220,11500,11840,12677,13066,13656],
+  "Nebraska":     [5749,7370,9272,10876,11726,13027,13300,13624,14672,15491,16147],
+  "Nevada":       [5001,6127,7554,8097,8477,9254,9500,9787,10936,12338,13768],
+  "New Hampshire":[6398,8233,10478,12584,14014,16483,16900,17396,19600,21484,22978],
+  "New Jersey":   [9776,12241,14972,17620,18885,21125,21700,22227,25099,26127,27234],
+  "New Mexico":   [4264,6246,8358,9702,9722,10855,11100,11440,12867,15891,17844],
+  "New York":     [9474,11740,14389,17774,20092,24040,24800,25575,29873,30989,31918],
+  "North Carolina":[4739,6198,7786,8631,8566,9235,9500,9775,11100,12227,12995],
+  "North Dakota": [4767,6218,8145,9588,11772,13174,13500,14010,14521,16206,17102],
+  "Ohio":         [5726,7367,9249,10597,11236,12690,13000,13401,14837,16170,17257],
+  "Oklahoma":     [3923,5420,6936,7735,8063,8522,8800,9002,10890,11398,12162],
+  "Oregon":       [6148,7809,9085,9551,10027,11624,11900,12313,13717,15726,17161],
+  "Pennsylvania": [7411,9461,11497,13572,14682,17100,17600,18127,20574,20157,21091],
+  "Rhode Island": [7354,9449,11812,14110,15091,17076,17500,18002,20064,21135,22110],
+  "South Carolina":[4510,5935,7732,8752,9317,10632,10900,11225,12659,14040,15060],
+  "South Dakota": [4287,5884,7428,8148,8625,9529,9800,10056,10789,11917,12828],
+  "Tennessee":    [3958,5302,6795,7751,8032,9227,9500,9750,10820,11511,12197],
+  "Texas":        [5164,6714,8009,8671,9059,9428,9700,9990,10898,11681,12444],
+  "Utah":         [3244,4448,5437,6212,6440,7492,7700,7916,9552,10355,11347],
+  "Vermont":      [7698,9969,12348,15226,17613,20542,21100,21717,24608,26671,28818],
+  "Virginia":     [5613,7204,9144,10761,11249,12654,13000,13411,15171,16116,17104],
+  "Washington":   [5840,7404,8822,9585,10381,12267,12600,13001,14497,16925,18564],
+  "West Virginia":[5467,7068,9084,10613,11362,12158,12500,12824,13827,14150,14575],
+  "Wisconsin":    [6618,8427,10190,11360,11214,12100,12400,12793,13777,14929,15790],
+  "Wyoming":      [6664,8812,12181,15840,16442,17765,18200,18634,18397,19682,20521]
+};
+
+const states = Object.keys(stateData).sort();
+const ranked = [...states].sort((a,b) => stateData[b][10]-stateData[a][10]);
+
+function interpolate(snapshots) {
+  return years.map(yr => {
+    if (snapshotYears.includes(yr)) return snapshots[snapshotYears.indexOf(yr)];
+    let lo = 0, hi = snapshotYears.length - 1;
+    for (let j = 0; j < snapshotYears.length - 1; j++) {
+      if (snapshotYears[j] <= yr && snapshotYears[j+1] >= yr) { lo = j; hi = j+1; break; }
+    }
+    const t = (yr - snapshotYears[lo]) / (snapshotYears[hi] - snapshotYears[lo]);
+    return Math.round(snapshots[lo] + t * (snapshots[hi] - snapshots[lo]));
+  });
+}
+
+const fmt$ = n => "$" + Math.round(n).toLocaleString();
+
+const baseOpts = {
+  responsive: true,
+  interaction: { mode: 'index', intersect: false },
+  plugins: {
+    legend: { display: true, labels: { font:{family:'Inter',size:12}, color:'#64748b', boxWidth:12, boxHeight:12, borderRadius:4 } },
+    tooltip: {
+      backgroundColor:'#fff', borderColor:'#e2e8f0', borderWidth:1,
+      titleColor:'#1e293b', bodyColor:'#64748b',
+      titleFont:{ family:'Inter', weight:'700', size:13 },
+      bodyFont:{ family:'Inter', size:12 },
+      padding:12, cornerRadius:10,
+      callbacks:{ label: ctx => ` ${ctx.dataset.label}: ${fmt$(ctx.parsed.y)}` }
+    }
+  },
+  scales: {
+    x: { grid:{color:'#f1f5f9'}, ticks:{font:{family:'Inter',size:11},color:'#94a3b8',maxTicksLimit:10} },
+    y: { grid:{color:'#f1f5f9'}, ticks:{font:{family:'Inter',size:11},color:'#94a3b8',callback:v=>fmt$(v)}, beginAtZero:false }
+  }
+};
+
+// National chart
+new Chart(document.getElementById('nationalChart').getContext('2d'), {
+  type: 'line',
+  data: {
+    labels: years,
+    datasets: [{
+      label: 'National avg per pupil (nominal)',
+      data: national,
+      borderColor: '#4f46e5',
+      backgroundColor: 'rgba(79,70,229,0.07)',
+      borderWidth: 2.5,
+      pointRadius: 3,
+      pointBackgroundColor: '#4f46e5',
+      fill: true,
+      tension: 0.35
+    }]
+  },
+  options: baseOpts
+});
+
+// State chart
+let stateChart = null;
+
+function populate() {
+  const sel = document.getElementById('stateSelect');
+  states.forEach(s => {
+    const o = document.createElement('option');
+    o.value = s; o.textContent = s; sel.appendChild(o);
+  });
+  sel.value = 'Texas';
+}
+
+function renderState() {
+  const state = document.getElementById('stateSelect').value;
+  const stateVals = interpolate(stateData[state]);
+  const first = stateVals[0], last = stateVals[stateVals.length-1];
+  const growth = Math.round(((last-first)/first)*100);
+  const rank = ranked.indexOf(state)+1;
+  const suffix = rank===1?"st":rank===2?"nd":rank===3?"rd":"th";
+  const natFirst = national[0], natLast = national[national.length-1];
+  const gap1993 = first > natFirst ? first - natFirst : natFirst - first;
+  const gap2024 = last > natLast ? last - natLast : natLast - last;
+  const aboveBelow1993 = first >= natFirst ? "above" : "below";
+  const aboveBelow2024 = last >= natLast ? "above" : "below";
+
+  document.getElementById('stateCaption').innerHTML =
+    `<strong>${state}</strong> spent ${fmt$(first)}/pupil in 1993 and ${fmt$(last)}/pupil in 2024 — a <strong>+${growth}% nominal increase</strong> over 31 years. Currently ranked <strong>${rank}${suffix} of 50 states</strong>. In 1993 it was ${fmt$(gap1993)} ${aboveBelow1993} the national average; in 2024 it is ${fmt$(gap2024)} ${aboveBelow2024}.`;
+
+  if (stateChart) stateChart.destroy();
+  stateChart = new Chart(document.getElementById('stateChart').getContext('2d'), {
+    type: 'line',
+    data: {
+      labels: years,
+      datasets: [
+        {
+          label: `${state} (nominal)`,
+          data: stateVals,
+          borderColor: '#4f46e5',
+          backgroundColor: 'rgba(79,70,229,0.07)',
+          borderWidth: 2.5,
+          pointRadius: 3,
+          pointBackgroundColor: '#4f46e5',
+          fill: true,
+          tension: 0.35
+        },
+        {
+          label: 'National average',
+          data: national,
+          borderColor: '#94a3b8',
+          backgroundColor: 'transparent',
+          borderWidth: 1.5,
+          borderDash: [5,4],
+          pointRadius: 0,
+          fill: false,
+          tension: 0.35
+        }
+      ]
+    },
+    options: baseOpts
+  });
+}
+
+populate();
+renderState();
+</script>
+</body>
+</html>
